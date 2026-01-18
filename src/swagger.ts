@@ -3,7 +3,7 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import { Request, Response } from "express";
 
-const userSpec = yaml.load("@/docs/user.yaml");
+const userSpec = yaml.load("./src/docs/user.yaml");
 
 export const SwaggerDocs = (app: express.Application) => {
   app.use(
@@ -12,10 +12,7 @@ export const SwaggerDocs = (app: express.Application) => {
     swaggerUi.setup(null, {
       explorer: true, // bật chọn definition
       swaggerOptions: {
-        urls: [
-          { url: "/swagger/user.json", name: "User API" },
-          { url: "/swagger/post.json", name: "Post API" },
-        ],
+        urls: [{ url: "/swagger/user.json", name: "User API" }],
       },
     }),
   );
