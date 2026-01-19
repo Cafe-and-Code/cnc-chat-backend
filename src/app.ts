@@ -8,7 +8,7 @@ import morgan from "morgan";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
 
-import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from "@/config";
+import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from "@/config/env";
 
 export class App {
   public app: express.Application;
