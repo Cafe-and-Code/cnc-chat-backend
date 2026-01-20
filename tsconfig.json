@@ -21,19 +21,6 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": ["src/*"]
-      // "@configs/*": ["src/configs/*"],
-      // "@constants/*": ["src/constants/*"],
-      // "@helpers/*": ["src/helpers/*"],
-      // "@controllers/*": ["src/controllers/*"],
-      // "@routes/*": ["src/routes/*"],
-      // "@utils/*": ["src/utils/*"],
-      // "@middlewares/*": ["src/middlewares/*"],
-      // "@services/*": ["src/services/*"],
-      // "@docs/*": ["src/docs/*"],
-      // "@dto/*": ["src/dto/*"],
-      // "@models/*": ["src/models/*"],
-      // "@validators/*": ["src/validators/*"],
-      // "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env"]
