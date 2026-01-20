@@ -1,4 +1,4 @@
-import { ERROR_STATUS } from "@/constant/error";
+import { ERROR_STATUS } from "@/constants/error";
 import { Request, Response } from "express";
 import { IErrorHttps } from "@/interfaces/errors.interface";
 

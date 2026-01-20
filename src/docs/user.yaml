@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Users API
-  description: API quản lý người dùng
+  description: API CNC
   version: 1.0.0
 
 servers:

@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["src/interfaces", "node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "pretty": true,
     "sourceMap": true,
     "declaration": true,
@@ -17,11 +17,24 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"]
+      // "@configs/*": ["src/configs/*"],
+      // "@constants/*": ["src/constants/*"],
+      // "@helpers/*": ["src/helpers/*"],
+      // "@controllers/*": ["src/controllers/*"],
+      // "@routes/*": ["src/routes/*"],
+      // "@utils/*": ["src/utils/*"],
+      // "@middlewares/*": ["src/middlewares/*"],
+      // "@services/*": ["src/services/*"],
+      // "@docs/*": ["src/docs/*"],
+      // "@dto/*": ["src/dto/*"],
+      // "@models/*": ["src/models/*"],
+      // "@validators/*": ["src/validators/*"],
+      // "@interfaces/*": ["src/interfaces/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.json", ".env"]
 }
