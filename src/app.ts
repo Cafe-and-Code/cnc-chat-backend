@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
+import { sequelize } from "@/configs/database";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
 
@@ -20,8 +21,9 @@ export class App {
     this.env = NODE_ENV || "development";
     this.port = PORT || 3000;
 
+    this.initializePgDataBase();
     this.initializeMiddlewares();
-    this.initializeSwwagger();
+    this.initializeSwagger();
   }
   public listen() {
     this.app.listen(this.port, () => {
@@ -47,7 +49,16 @@ export class App {
     this.app.use(cookieParser());
   }
 
-  private initializeSwwagger() {
+  private initializeSwagger() {
     SwaggerDocs(this.app);
+  }
+
+  private async initializePgDataBase() {
+    try {
+      await sequelize.authenticate();
+      console.log("✅ Database connected");
+    } catch (error) {
+      console.error("Unable to connect to the database:", error);
+    }
   }
 }
