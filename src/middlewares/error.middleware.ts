@@ -2,7 +2,7 @@ import { ERROR_STATUS } from "@/constants/error";
 import { Request, Response } from "express";
 import { IErrorHttps } from "@/interfaces/errors.interface";
 
-export const ErrorMiddleware = (err: IErrorHttps, req: Request, res: Response) => {
+export const errorMiddleware = (err: IErrorHttps, req: Request, res: Response) => {
   const statusCode = err.statusCode || 500;
   switch (statusCode) {
     case ERROR_STATUS.NOT_FOUND:

@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
+import { errorMiddleware } from "./middlewares/error.middleware";
 import { sequelize } from "@/configs/database";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
@@ -47,6 +48,7 @@ export class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(errorMiddleware);
   }
 
   private initializeSwagger() {
