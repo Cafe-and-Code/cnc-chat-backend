@@ -3,8 +3,12 @@ import { sequelize } from "@/configs/database";
 
 export class User extends Model {
   public id!: number;
+  public username!: string;
   public email!: string;
   public password!: string;
+  public fullName!: string;
+  public dateOfBirth!: string;
+  public avatarImageUrl!: string;
 }
 
 User.init(
@@ -14,18 +18,76 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
+
+    username: {
+      type: DataTypes.STRING(255),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: "please add the user name",
+        },
+      },
     },
-    password: {
-      type: DataTypes.STRING,
+
+    email: {
+      type: DataTypes.STRING(255),
       allowNull: false,
+      unique: {
+        name: "unique_email",
+        msg: "Email address already taken",
+      },
+      validate: {
+        isEmail: true,
+        notNull: {
+          msg: "please add the user email address",
+        },
+      },
+    },
+
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "please add the user password",
+        },
+      },
+    },
+
+    fullName: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "please add the user fullName",
+        },
+      },
+    },
+
+    dateOfBirth: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "please add the user date of birth",
+        },
+      },
+    },
+
+    avatarImageUrl: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "please add the user date of birth",
+        },
+      },
     },
   },
   {
     sequelize,
+    modelName: "User",
     tableName: "users",
+    timestamps: true,
   },
 );

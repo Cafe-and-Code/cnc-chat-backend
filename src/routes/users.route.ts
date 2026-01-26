@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { IRoutes } from "@/interfaces/routes.interface";
-export class MainRoute implements IRoutes {
+export class UserRoute implements IRoutes {
+  public path = "/users";
   public router = Router();
 }
