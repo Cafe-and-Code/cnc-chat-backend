@@ -6,6 +6,7 @@ export class User extends Model {
   public username!: string;
   public email!: string;
   public password!: string;
+  public confirmPassword!: string;
   public fullName!: string;
   public dateOfBirth!: string;
   public avatarImageUrl!: string;
