@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Service } from "typedi";
-import { SECRET_KEY } from "@/configs/env";
-import { User } from "@/models/user.model";
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "@/configs/env";
+import { User } from "@/interfaces/users.interface";
+import { UserModel } from "@/models/user.model";
 import { HttpException } from "@/exceptions/httpException";
 
 const generateAccessToken = (user) => {
@@ -12,7 +13,7 @@ const generateAccessToken = (user) => {
       username: user.username,
       email: user.email,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    ACCESS_TOKEN_SECRET,
     { expiresIn: "15m" },
   );
 };
@@ -24,7 +25,7 @@ const generateRefreshToken = (user) => {
       username: user.username,
       email: user.email,
     },
-    process.env.REFRESH_TOKEN_SECRET,
+    REFRESH_TOKEN_SECRET,
     { expiresIn: "7d" },
   );
 };
@@ -34,8 +35,8 @@ export class AuthService {
   public async register(userData: User) {
     const { username, email, password, confirmPassword, fullName, dateOfBirth, avatarImageUrl } =
       userData;
-    const checkExistEmail = await User.findOne({
-      where: { email },
+    const userAvailable = await UserModel.findOne({
+      where: { username },
     });
     // check validate
     if (
@@ -49,12 +50,12 @@ export class AuthService {
     ) {
       throw new HttpException(400, "All fields are mandatory!");
     }
-    if (checkExistEmail)
-      throw new HttpException(409, `This email ${userData.email} already exists`);
+    if (userAvailable)
+      throw new HttpException(409, `This email ${userData.username} already exists`);
 
     // Hash password
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
+    const newUser = await UserModel.create({
       email,
       password: hashPassword,
     });
@@ -62,4 +63,21 @@ export class AuthService {
   }
 
   // [POST] /login
+  public async login(userData: User) {
+    const { username, password } = userData;
+    if (!username || !password) {
+      throw new HttpException(400, "All fields are mandatory!");
+    }
+    const userAvailable = await UserModel.findOne({
+      where: { username },
+    });
+    if (userAvailable) throw new HttpException(409, `This email ${username} was not found`);
+    const isPasswordMatching = await bcrypt.compare(password, userAvailable.password);
+    if (!isPasswordMatching) {
+      throw new HttpException(409, "You're password not matching");
+    }
+    const accessToken = generateAccessToken(userAvailable);
+    const refreshToken = generateRefreshToken(userAvailable);
+    return { userAvailable, accessToken, refreshToken };
+  }
 }

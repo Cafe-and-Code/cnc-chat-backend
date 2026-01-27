@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "@/configs/database";
 
-export class User extends Model {
+export class UserModel extends Model {
   public id!: number;
   public username!: string;
   public email!: string;
@@ -12,7 +12,7 @@ export class User extends Model {
   public avatarImageUrl!: string;
 }
 
-User.init(
+UserModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
