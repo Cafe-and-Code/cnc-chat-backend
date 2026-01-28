@@ -6,7 +6,7 @@ import { User } from "@/interfaces/users.interface";
 import { UserModel } from "@/models/user.model";
 import { HttpException } from "@/exceptions/httpException";
 
-const generateAccessToken = (user) => {
+const generateAccessToken = (user: User) => {
   return jwt.sign(
     {
       id: user.id,
@@ -18,7 +18,7 @@ const generateAccessToken = (user) => {
   );
 };
 
-const generateRefreshToken = (user) => {
+const generateRefreshToken = (user: User) => {
   return jwt.sign(
     {
       id: user.id,
@@ -31,8 +31,8 @@ const generateRefreshToken = (user) => {
 };
 @Service()
 export class AuthService {
-  // [POST] /register
-  public async register(userData: User) {
+  // [POST]/register
+  public async registerService(userData: User) {
     const { username, email, password, confirmPassword, fullName, dateOfBirth, avatarImageUrl } =
       userData;
     const userAvailable = await UserModel.findOne({
@@ -62,8 +62,8 @@ export class AuthService {
     return newUser;
   }
 
-  // [POST] /login
-  public async login(userData: User) {
+  // [POST]/Login
+  public async loginService(userData: User) {
     const { username, password } = userData;
     if (!username || !password) {
       throw new HttpException(400, "All fields are mandatory!");
@@ -79,5 +79,15 @@ export class AuthService {
     const accessToken = generateAccessToken(userAvailable);
     const refreshToken = generateRefreshToken(userAvailable);
     return { userAvailable, accessToken, refreshToken };
+  }
+
+  //[POST]/Refresh token
+  public refreshTokenService(refreshToken: string) {
+    let newAccessToken: string = null;
+    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded: User) => {
+      if (err) throw new HttpException(409, "No refresh token provided");
+      newAccessToken = generateAccessToken(decoded);
+    });
+    return { newAccessToken };
   }
 }

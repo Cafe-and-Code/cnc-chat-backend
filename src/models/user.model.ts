@@ -46,7 +46,7 @@ UserModel.init(
     },
 
     password: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(32),
       allowNull: false,
       validate: {
         notNull: {

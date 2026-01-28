@@ -5,22 +5,24 @@ import { AuthService } from "@/services/auth.service";
 import { NextFunction, Request, Response } from "express";
 export class AuthController {
   public auth = Container.get(AuthService);
-  // Register
+
+  // [POST]/register
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.body;
-      await this.auth.register(userData);
+      await this.auth.registerService(userData);
       res.status(201).json({ status: 201, message: "successfully!" });
     } catch (error) {
       res.status(400).json({ status: 400, message: "User data us not valid!" });
       next(error);
     }
   };
-  // Login
+
+  // [POST]/Login
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: User = req.body;
-      const { userAvailable, accessToken, refreshToken } = await this.auth.login(userData);
+      const { userAvailable, accessToken, refreshToken } = await this.auth.loginService(userData);
       const isProduction = NODE_ENV === "production";
       // Set cookie HttpOnly
       res.cookie("accessToken", accessToken, {
@@ -50,15 +52,39 @@ export class AuthController {
       next(error);
     }
   };
-  // Log out
+
+  //[POST]/Log out
   public logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("accessToken", { path: "/" });
       res.clearCookie("refreshToken", { path: "/" });
       res.clearCookie("isLoggedIn", { path: "/" });
-      res.status(200).send({ message: "Logged out successfully." });
+      res.status(200).json({ status: 200, message: "Logged out successfully." });
     } catch (error) {
-      res.status(500).send({ message: "Failed to log out." });
+      res.status(500).json({ status: 500, message: "Failed to log out." });
+      next(error);
+    }
+  };
+
+  //[POST]/Refresh token
+  public refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { refreshToken } = req.cookies;
+      if (!refreshToken) {
+        return res.status(401).json({ status: 401, message: "No refresh token provided" });
+      }
+      const { newAccessToken } = this.auth.refreshTokenService(refreshToken);
+      const isProduction = process.env.ENV_DEPLOY === "production";
+      // Set cookie HttpOnly
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 15 * 60 * 1000, // 15 minutes
+      });
+      return res.status(200).json({ status: 200, message: "Access token refreshed" });
+    } catch (error) {
       next(error);
     }
   };
