@@ -10,6 +10,7 @@ export const {
   LOG_DIR,
   LOG_FORMAT,
   ORIGIN,
+  HOST_NAME,
 } = process.env;
 export const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB } =
   process.env;

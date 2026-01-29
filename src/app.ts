@@ -9,25 +9,28 @@ import { errorMiddleware } from "./middlewares/error.middleware";
 import { sequelize } from "@/configs/database";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
+import { MainRoute } from "./routes/index.route";
 
-import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from "@/configs/env";
+import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, HOST_NAME } from "@/configs/env";
 
 export class App {
   public app: express.Application;
   public env: string;
-  public port: string | number;
+  public port: number;
+  public hostName: string = HOST_NAME || "localhost";
 
   constructor() {
     this.app = express();
     this.env = NODE_ENV || "development";
-    this.port = PORT || 3000;
+    this.port = Number(PORT) || 3000;
 
     this.initializePgDataBase();
     this.initializeMiddlewares();
     this.initializeSwagger();
+    this.initializeRoute();
   }
   public listen() {
-    this.app.listen(this.port, () => {
+    this.app.listen(this.port, this.hostName, () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
@@ -62,5 +65,9 @@ export class App {
     } catch (error) {
       console.error("Unable to connect to the database:", error);
     }
+  }
+
+  private async initializeRoute() {
+    this.app.use("/api/v1", new MainRoute().router);
   }
 }
