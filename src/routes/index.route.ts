@@ -3,19 +3,14 @@ import { IRoutes } from "@/interfaces/routes.interface";
 import { AuthRoute } from "./auth.route";
 
 export class MainRoute implements IRoutes {
-  public router = Router();
+  public router: Router = Router();
   public authRouter = new AuthRoute();
 
   constructor() {
-    this.defineRoutes.forEach((route) => {
-      this.router.use(route.path, route.route);
-    });
+    this.initializeRoutes();
   }
 
-  private defineRoutes = [
-    {
-      path: "/auth",
-      route: this.authRouter.router,
-    },
-  ];
+  private initializeRoutes() {
+    this.router.use("/auth", () => this.authRouter);
+  }
 }

@@ -9,7 +9,8 @@ import { errorMiddleware } from "./middlewares/error.middleware";
 import { sequelize } from "@/configs/database";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
-import { MainRoute } from "./routes/index.route";
+import { AuthRoute } from "@/routes/auth.route";
+import { IRoutes } from "@/interfaces/routes.interface";
 
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, HOST_NAME } from "@/configs/env";
 
@@ -27,7 +28,8 @@ export class App {
     this.initializePgDataBase();
     this.initializeMiddlewares();
     this.initializeSwagger();
-    this.initializeRoute();
+    this.initializeRoutes([new AuthRoute()]);
+    this.initializeErrorHandling();
   }
   public listen() {
     this.app.listen(this.port, this.hostName, () => {
@@ -67,7 +69,15 @@ export class App {
     }
   }
 
-  private async initializeRoute() {
-    this.app.use("/api/v1", new MainRoute().router);
+  private initializeRoutes(routes: IRoutes[]) {
+    console.log(111);
+
+    routes.forEach((route) => {
+      this.app.use(`/api/v1${route.path}`, route.router);
+    });
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware);
   }
 }
