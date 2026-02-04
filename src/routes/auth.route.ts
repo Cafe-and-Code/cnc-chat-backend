@@ -5,10 +5,10 @@ import { AuthController } from "@/controllers/auth.controller";
 export class AuthRoute implements IRoutes {
   public path = "/auth";
   public router: Router = Router();
-  public auth = new AuthController();
+  public auth!: AuthController;
 
   constructor() {
-    console.log("✅ AuthRoute constructor called");
+    this.auth = new AuthController();
     this.initializeRoutes();
   }
 

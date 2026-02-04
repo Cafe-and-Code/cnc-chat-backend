@@ -4,8 +4,10 @@ import { User } from "@/interfaces/users.interface";
 import { AuthService } from "@/services/auth.service";
 import { NextFunction, Request, Response } from "express";
 export class AuthController {
-  public auth = Container.get(AuthService);
-
+  private auth: AuthService;
+  constructor() {
+    this.auth = Container.get(AuthService);
+  }
   // [POST]/register
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -73,7 +75,7 @@ export class AuthController {
       if (!refreshToken) {
         return res.status(401).json({ status: 401, message: "No refresh token provided" });
       }
-      const { newAccessToken } = this.auth.refreshTokenService(refreshToken);
+      const { newAccessToken } = await this.auth.refreshTokenService(refreshToken);
       const isProduction = process.env.ENV_DEPLOY === "production";
       // Set cookie HttpOnly
       res.cookie("accessToken", newAccessToken, {

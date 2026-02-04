@@ -1,8 +1,13 @@
 import { ERROR_STATUS } from "@/constants/error";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { IErrorHttps } from "@/interfaces/errors.interface";
 
-export const errorMiddleware = (err: IErrorHttps, req: Request, res: Response) => {
+export const errorMiddleware = (
+  err: IErrorHttps,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const statusCode = err.statusCode || 500;
   switch (statusCode) {
     case ERROR_STATUS.NOT_FOUND:
@@ -34,6 +39,7 @@ export const errorMiddleware = (err: IErrorHttps, req: Request, res: Response) =
       });
       break;
     default:
+      next();
       break;
   }
 };

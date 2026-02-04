@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express from "express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
@@ -9,9 +10,7 @@ import { errorMiddleware } from "./middlewares/error.middleware";
 import { sequelize } from "@/configs/database";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
-import { AuthRoute } from "@/routes/auth.route";
 import { IRoutes } from "@/interfaces/routes.interface";
-
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, HOST_NAME } from "@/configs/env";
 
 export class App {
@@ -20,15 +19,14 @@ export class App {
   public port: number;
   public hostName: string = HOST_NAME || "localhost";
 
-  constructor() {
+  constructor(routes: IRoutes[]) {
     this.app = express();
     this.env = NODE_ENV || "development";
     this.port = Number(PORT) || 3000;
-
     this.initializePgDataBase();
     this.initializeMiddlewares();
     this.initializeSwagger();
-    this.initializeRoutes([new AuthRoute()]);
+    this.initializeRoutes(routes);
     this.initializeErrorHandling();
   }
   public listen() {
@@ -70,8 +68,6 @@ export class App {
   }
 
   private initializeRoutes(routes: IRoutes[]) {
-    console.log(111);
-
     routes.forEach((route) => {
       this.app.use(`/api/v1${route.path}`, route.router);
     });
