@@ -64,8 +64,6 @@ export class AuthService {
 
   // [POST]/Login
   public async loginService(userData: User) {
-    console.log(userData);
-
     const { username, password } = userData;
     if (!username || !password) {
       throw new HttpException(400, "All fields are mandatory!");

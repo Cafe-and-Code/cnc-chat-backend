@@ -8,18 +8,27 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const statusCode = err.statusCode || 500;
+  const statusCode = err.status || 500;
+  console.log(statusCode);
+
   switch (statusCode) {
-    case ERROR_STATUS.NOT_FOUND:
+    case ERROR_STATUS.VALIDATE_ERROR:
       res.status(statusCode).json({
         title: "Validateion Failed",
         message: err.message,
         stack: err.stack,
       });
       break;
-    case ERROR_STATUS.INTERNAL_SERVER:
+    case ERROR_STATUS.NOT_FOUND:
       res.status(statusCode).json({
         title: "Not Found",
+        message: err.message,
+        stack: err.stack,
+      });
+      break;
+    case ERROR_STATUS.INTERNAL_SERVER:
+      res.status(statusCode).json({
+        title: "Internal Server",
         message: err.message,
         stack: err.stack,
       });
