@@ -9,7 +9,6 @@ export const errorMiddleware = (
   next: NextFunction,
 ) => {
   const statusCode = err.status || 500;
-  console.log(statusCode);
 
   switch (statusCode) {
     case ERROR_STATUS.VALIDATE_ERROR:

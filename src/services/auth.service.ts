@@ -35,10 +35,7 @@ export class AuthService {
   public async registerService(userData: User) {
     const { username, email, password, confirmPassword, fullName, dateOfBirth, avatarImageUrl } =
       userData;
-    const userAvailable = await UserModel.findOne({
-      where: { username },
-    });
-    // check validate
+
     if (
       !username ||
       !email ||
@@ -50,15 +47,26 @@ export class AuthService {
     ) {
       throw new HttpException(400, "All fields are mandatory!");
     }
-    if (userAvailable)
-      throw new HttpException(409, `This email ${userData.username} already exists`);
 
-    // Hash password
+    if (password !== confirmPassword) {
+      throw new HttpException(400, "Passwords do not match");
+    }
+
+    const userAvailable = await UserModel.findOne({
+      where: { username },
+    });
+
+    if (userAvailable) {
+      throw new HttpException(409, `Username ${username} already exists`);
+    }
+
     const hashPassword = await bcrypt.hash(password, 10);
+
     const newUser = await UserModel.create({
-      email,
+      ...userData,
       password: hashPassword,
     });
+
     return newUser;
   }
 

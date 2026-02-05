@@ -5,11 +5,11 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8888
+  - url: http://localhost:8888/api/v1
     description: Local
 
 paths:
-  /api/Users:
+  /auth/register:
     post:
       tags:
         - User
@@ -37,7 +37,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /api/Users/Login:
+  /auth/login:
     post:
       summary: Đăng nhập user
       description: API cho phép user đăng nhập bằng username và password
@@ -87,7 +87,7 @@ paths:
                   message:
                     type: string
                     example: Unauthorized
-  /api/Users/profile:
+  /auth/profile:
     get:
       tags:
         - Profile
@@ -125,6 +125,12 @@ components:
           type: date
           example: "example"
         avatarImageUrl: 
+          type: string
+          example: "example"
+        password: 
+          type: string
+          example: "example"
+        confirmPassword: 
           type: string
           example: "example"
 
