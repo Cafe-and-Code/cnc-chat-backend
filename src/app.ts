@@ -7,7 +7,6 @@ import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
 import { errorMiddleware } from "./middlewares/error.middleware";
-import { sequelize } from "@/configs/database";
 import { SwaggerDocs } from "@/swagger";
 import { logger, stream } from "@/utils/logger";
 import { IRoutes } from "@/interfaces/routes.interface";
@@ -23,7 +22,6 @@ export class App {
     this.app = express();
     this.env = NODE_ENV || "development";
     this.port = Number(PORT) || 3000;
-    this.initializePgDataBase();
     this.initializeMiddlewares();
     this.initializeSwagger();
     this.initializeRoutes(routes);
@@ -55,16 +53,6 @@ export class App {
 
   private initializeSwagger() {
     SwaggerDocs(this.app);
-  }
-
-  private async initializePgDataBase() {
-    try {
-      await sequelize.authenticate();
-      await sequelize.sync();
-      console.log("✅ Database connected");
-    } catch (error) {
-      console.error("Unable to connect to the database:", error);
-    }
   }
 
   private initializeRoutes(routes: IRoutes[]) {

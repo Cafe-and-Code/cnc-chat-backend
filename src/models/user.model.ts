@@ -10,6 +10,9 @@ export class UserModel extends Model {
   public fullName!: string;
   public dateOfBirth!: string;
   public avatarImageUrl!: string;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 UserModel.init(
@@ -46,7 +49,7 @@ UserModel.init(
     },
 
     password: {
-      type: DataTypes.STRING(32),
+      type: DataTypes.STRING(255),
       allowNull: false,
       validate: {
         notNull: {
@@ -66,7 +69,7 @@ UserModel.init(
     },
 
     dateOfBirth: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
         notNull: {
@@ -90,5 +93,8 @@ UserModel.init(
     modelName: "User",
     tableName: "users",
     timestamps: true,
+    defaultScope: {
+      attributes: { exclude: ["password"] },
+    },
   },
 );
